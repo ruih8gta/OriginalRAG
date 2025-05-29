@@ -19,7 +19,7 @@ def setup_logger(log_path):
     )
     return logger
 
-def handle_exception(exc_type, exc_value, exc_traceback):
+def handle_exception(logger, exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return

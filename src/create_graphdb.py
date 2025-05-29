@@ -40,19 +40,45 @@ parent_dir = os.path.dirname(current_dir)
 URI = "neo4j://localhost"
 AUTH = ("neo4j", "password")
 
+TEMP_PROMPT =(
+"# プロンプトテンプレートの設定"
+)
+
+
+CYPHER_GENERATION_TEMPLATE=(
+"Task: グラフデータベースに問い合わせるCypher文を生成する。"
+"指示:"
+"schemaで提供されている関係タイプとプロパティのみを使用してください。"
+"提供されていない他の関係タイプやプロパティは使用しないでください。"
+"ノードで指定するidはid_listで提供されているidの中から近いものを選択し、変更してください。"
+"schema:"
+"{schema}"
+"id_list:"
+"{id_list}"
+"注意: 回答に説明や謝罪は含めないでください。"
+"Cypher ステートメントを作成すること以外を問うような質問には回答しないでください。"
+"生成された Cypher ステートメント以外のテキストを含めないでください。"
+"例) 以下は、特定の質問に対して生成されたCypher文の例です:"
+"# モアナ2の主役俳優の1人は?"
+"MATCH (e1:__Entity__)-[:STARS]->(e2:__Entity__) WHERE e1.id = 'アナと伝説の海2' RETURN e2.id"
+"# 頭文字Dの作者は?"
+"MATCH (e1:__Entity__)-[:AUTHOR]->(e2:__Entity__) WHERE e1.id = '頭文字D' RETURN e2.id"
+"# モアナ2の制作会社は?"
+"MATCH (e1:__Entity__)-[:PRODUCED]->(e2:__Entity__) WHERE e1.id = 'Moana 2' RETURN e2.id"
+"質問: {question}"
+)
+
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
 
 def create_graph_doc_file(chat_instance,documents,db_path):
     # テキストファイルを読み込む
 
-     # プロンプトテンプレートの設定
+    # プロンプトテンプレートの設定
     # graphdb_create.txtを読み込み
     template =""
-    with open("./prompts/graphdb_create.txt", "r", encoding="utf-8") as f:
-        template = f.read()
 
-    prompt = ChatPromptTemplate.from_template(template)
+    prompt = ChatPromptTemplate.from_template(TEMP_PROMPT)
 
     # LCELによるチェーン作成
     rag_chain_from_data = (
@@ -132,7 +158,6 @@ def delete_graph(tx):
     return result
 
 
-
 def retrive():
     emb_model_type = "azure_emb"
     emb_instance = model_settings.embeddings(emb_model_type)
@@ -160,33 +185,6 @@ def rag(query_prompt):
     llm = model_instance.llm 
     # Cypherクエリ用のプロンプトテンプレート
     ## 素のlangchainテンプレートだと表記ゆれに弱いので、自前で少し修正(id_list部分の記述を追加)
-    CYPHER_GENERATION_TEMPLATE = """
-    Task: グラフデータベースに問い合わせるCypher文を生成する。
-
-    指示:
-    schemaで提供されている関係タイプとプロパティのみを使用してください。
-    提供されていない他の関係タイプやプロパティは使用しないでください。
-    ノードで指定するidはid_listで提供されているidの中から近いものを選択し、変更してください。
-
-    schema:
-    {schema}
-    
-    id_list:
-    {id_list}
-
-    注意: 回答に説明や謝罪は含めないでください。
-    Cypher ステートメントを作成すること以外を問うような質問には回答しないでください。
-    生成された Cypher ステートメント以外のテキストを含めないでください。
-
-    例) 以下は、特定の質問に対して生成されたCypher文の例です:
-    # モアナ2の主役俳優の1人は?
-    MATCH (e1:__Entity__)-[:STARS]->(e2:__Entity__) WHERE e1.id = 'アナと伝説の海2' RETURN e2.id
-    # 頭文字Dの作者は?
-    MATCH (e1:__Entity__)-[:AUTHOR]->(e2:__Entity__) WHERE e1.id = '頭文字D' RETURN e2.id
-    # モアナ2の制作会社は?
-    MATCH (e1:__Entity__)-[:PRODUCED]->(e2:__Entity__) WHERE e1.id = 'Moana 2' RETURN e2.id
-
-    質問: {question}"""
 
     graph = Neo4jGraph(
         url = URI,

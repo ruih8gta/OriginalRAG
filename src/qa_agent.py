@@ -44,17 +44,6 @@ sys.excepthook = handle_exception
 log_message(logger, 'ツール起動', to_stdout=True)
 
 
-
-
-#チャットエージェント用のプロンプト
-BOT_SYSINT=(
-"あなたは、顧客の質問に答えるカスタマーサポートエージェントです。"
-"質問に対して、正確で迅速な回答を提供してください。"
-"質問が複数の質問で構成されている場合は、tool_div_queryを使用して質問を分割してください。"
-"時間に関する質問は、tool_get_timeを使用して時間を確認してください" 
-"質問を分割した後は、分割された質問に対して順番に回答してください。"
-"質問が分割できない場合は、元の質問に対して回答してください。"
-)
 #回答作成エージェント用のプロンプト
 ANSWER_SYSINT=(
 "次の文脈（context）のみに基づいて質問（question）に答えてください。答えはテキスト形式で出力してください:"
@@ -237,29 +226,6 @@ def Node_answer(state: State) -> State:
     
     return {"answer": answer,"messages": [answer],"step": step}
 
-"""
-def Node_tool(state: State) -> State:
-    #Node for the chatbot to answer questions.
-    tool_msg = state.get("messages", [])[-1]
-    outbound_msgs = []
-    for tool_call in tool_msg.tool_calls:
-        print(f"ツール呼び出し：{tool_call}")
-
-        if(tool_call["name"] == "tool_get_time"):
-            result = tool_get_time(tool_call["args"])
-        elif(tool_call["name"] == "tool_div_query"):
-            result = tool_div_query(tool_call["args"])
-        else:
-            raise NotImplementedError(f'Unknown tool call: {tool_call["name"]}')
-        outbound_msgs.append(
-                ToolMessage(
-                    content=result,
-                    name=tool_call["name"],
-                    tool_call_id=tool_call["id"],
-                )
-            )
-    return {"messages": outbound_msgs}
-"""
 def Node_human(state: State) -> State:
     last_msg = state["messages"][-1]
     print("🤖System:", last_msg.content)

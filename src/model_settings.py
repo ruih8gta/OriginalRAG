@@ -22,12 +22,11 @@ class inf_param:
     Temperature = 0.0
     Top_p = 1
     Max_tokens = None # 2048など
-    Top_k = 10
     # for embedding model
     CHUNK_SIZE = 4096
     CHUNK_OVERLAP = 512
     # for search
-    Top_k = 3  # 参照するドキュメント(chunk)数
+    Top_k = 2 # 参照するドキュメント(chunk)数
     Search_distance = 0.0 # 検索距離の閾値
 
 # チャットを利用する場合

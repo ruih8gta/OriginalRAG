@@ -24,17 +24,6 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.dirname(current_dir)
 
 
-
-# Sample documents
-samnple_documents = [
-    "Python is a popular programming language.",
-    "RAG combines retrieval and generation for better answers.",
-    "BM25 is a ranking function used by search engines.",
-    "OpenAI GPT models are powerful for text generation.",
-    "LangChain and LangGraph are useful for building workflows."
-]
-
-
 class BM25:
     """
     BM25（Best Matching 25）アルゴリズムの実装クラス
@@ -185,7 +174,7 @@ def load_keyword_db(db_path):
 
 
 
-def create_keyword_db(admin_path):
+def create_keyword_db(admin_path,doc_db_path):
     admin_info = common_func.load_admin_doc_key(admin_path)
 
     documents =[]
@@ -206,7 +195,6 @@ def create_keyword_db(admin_path):
         doc_ids.append(id)
         doc_names.append(file_name)
 
-    doc_db_path="C:\\Users\\nakagawa\\Desktop\\Knowledge_RAG\\data\\db"
     all_db_path =os.path.join(doc_db_path,"all")  
     # 全てのドキュメントを一つのDBに保存
     #フォルダがなければ作成
@@ -245,7 +233,8 @@ def set_rag_data_with_keyword(question,db_path,topk):
 if __name__ == "__main__":
 
     DOC_ADMIN_PATH = os.path.join(parent_dir,doc_admin_path)
-    create_keyword_db(DOC_ADMIN_PATH)
-    query = "過去の不具合事例について教えて"
-    doc_db_path_key="C:\\Users\\nakagawa\\Desktop\\Knowledge_RAG\\data\\db\\all\\keyword.json"
-    search_keyword_db(query, doc_db_path_key)
+    DOC_DB_PATH = os.path.join(parent_dir,doc_db_path)
+
+    create_keyword_db(DOC_ADMIN_PATH,DOC_DB_PATH)
+    
+    #search_keyword_db(query, doc_db_path_key)
