@@ -262,8 +262,8 @@ def Node_tool(state: State) -> State:
 """
 def Node_human(state: State) -> State:
     last_msg = state["messages"][-1]
-    print("System:", last_msg.content)
-    user_input = input("User: ")
+    print("🤖System:", last_msg.content)
+    user_input = input("👤User: ")
     # If it looks like the user is trying to quit, flag the conversation
     # as over.
     if user_input in {"q"}:
@@ -403,7 +403,7 @@ if(__name__ == "__main__"):
     app = graph_builder.compile()
 
     graoh_text = "```mermaid\n"+app.get_graph().draw_mermaid() +"```"## mermaidでCUIに表示する場合
-    with open("./tmp/graph.md", "w") as f:
+    with open("../tmp/graph.md", "w") as f:
         f.write(graoh_text)
     config = {"recursion_limit": 100}
     state = app.invoke({"messages": []}, config)

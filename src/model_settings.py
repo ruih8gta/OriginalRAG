@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from langchain_openai import AzureChatOpenAI
 #from langchain_aws import ChatBedrock
 from langchain_openai import AzureOpenAIEmbeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 #from langchain_aws import BedrockEmbeddings
 #import boto3
 
@@ -43,7 +43,7 @@ class models:
         self.llm = llm
         self.chat_model_name = chat_model_name
 
-    def Azure_Chat_model(conf_azure):
+    def ChatOpenAI(conf_azure):
         model_name = config[conf_azure]['MODEL']
 
         ref_temperature = inf_param.Temperature
@@ -74,7 +74,7 @@ class embeddings:
         model_name= config[conf_azure]['MODEL']
         embeddings = OpenAIEmbeddings(
             api_key=config[conf_azure]['API_KEY'],
-            emb_model_name=config[conf_azure]['MODEL'],
+            model=config[conf_azure]['MODEL'],
             chunk_size=1,
             disallowed_special=()
         )

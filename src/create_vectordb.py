@@ -8,8 +8,6 @@ from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import CharacterTextSplitter
 import json
 
-#sys.path.append(os.path.join(os.path.dirname(__file__), '.', 'backend')) # backendフォルダをパスに追加
-#sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
 import model_settings
 import common_func
 # 推論パラメータ設定
